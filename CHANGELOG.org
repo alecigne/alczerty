@@ -1,0 +1,9 @@
+#+title: Changelog
+
+* Development
+
+- Start alczerty as a single layout extending classic French AZERTY.
+- Preserve familiar base and Shift mappings and existing AltGr symbols.
+- Add direct accented capitals, ae/oe ligatures, guillemets, and
+  nonbreaking spaces through AltGr combinations.
+- Provide preview, build, and Linux XKB installation commands.

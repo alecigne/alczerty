@@ -1,0 +1,116 @@
+#+title: alczerty
+
+alczerty is my personal AZERTY-based keyboard layout. For now, it stays
+compatible with classic French AZERTY, with extras for French typography:
+accented capitals, ligatures, guillemets and nonbreaking spaces.
+
+The goal is a small, practical extension that makes switching between
+this layout and an ordinary AZERTY keyboard easy.
+
+* Layout
+
+The source of truth is [[file:layout/alczerty.toml][layout/alczerty.toml]], built with
+[[https://github.com/OneDeadKey/kalamine][Kalamine]]. Its installation identifier is =alczerty=.
+
+Base and Shift mappings follow classic French AZERTY. AltGr symbols
+include =€= on AltGr + E and =~= on AltGr + é.
+
+These shortcuts produce characters directly. Key names refer to the
+labels on a classic French AZERTY keyboard: =é= is the 2 key, for example.
+
+| Shortcut              | Character | Description              |
+|-----------------------+-----------+--------------------------|
+| Shift + AltGr + é     | É         | Capital e, acute accent  |
+| Shift + AltGr + è     | È         | Capital e, grave accent  |
+| Shift + AltGr + à     | À         | Capital a, grave accent  |
+| Shift + AltGr + ç     | Ç         | Capital c, cedilla       |
+| Shift + AltGr + ù     | Ù         | Capital u, grave accent  |
+| AltGr + A             | æ         | ae ligature              |
+| Shift + AltGr + A     | Æ         | Capital ae ligature      |
+| AltGr + O             | œ         | oe ligature              |
+| Shift + AltGr + O     | Œ         | Capital oe ligature      |
+| AltGr + C             | ç         | c, cedilla               |
+| Shift + AltGr + C     | Ç         | Capital c, cedilla       |
+| AltGr + W             | «         | Opening guillemet        |
+| AltGr + X             | »         | Closing guillemet        |
+| AltGr + Space         | U+00A0    | Nonbreaking space        |
+| Shift + AltGr + Space | U+202F    | Narrow nonbreaking space |
+
+The circumflex and diaeresis dead keys remain available for characters
+such as =Ê=, =Â= and =Ë=. Space and Shift + Space produce ordinary spaces.
+AltGr + Space and Shift + AltGr + Space produce nonbreaking spaces.
+
+* Preview and build
+
+Install [[https://github.com/casey/just][just]], Python 3.11 or newer, and Kalamine. The initial build is
+validated with Kalamine 0.40:
+
+#+begin_src sh
+  uv tool install kalamine==0.40
+  just preview
+#+end_src
+
+=just preview= starts Kalamine's browser preview with live reload.
+To build distributable files:
+
+#+begin_src sh
+  just build
+#+end_src
+
+Output is written to =dist/=, which is excluded from Git. These commands
+can also be run directly:
+
+#+begin_src sh
+  kalamine watch layout/alczerty.toml
+  kalamine build layout/alczerty.toml
+#+end_src
+
+* Use on Linux
+
+Install the generated XKB symbols file (requires =sudo=):
+
+#+begin_src sh
+  just install
+#+end_src
+
+This builds the layout and copies =dist/alczerty.xkb_symbols= into
+=/usr/share/X11/xkb/symbols/alczerty=. Set =XKB_CONFIG_ROOT= to override
+the XKB root directory.
+
+On X.Org, activate the installed layout for the current session:
+
+#+begin_src sh
+  just use
+#+end_src
+
+To return to standard French AZERTY:
+
+#+begin_src sh
+  setxkbmap fr
+#+end_src
+
+Wayland setup depends on the compositor or desktop environment. Configure
+it to load the installed =alczerty= XKB layout; =just use= is for X.Org.
+Installing the symbols file alone does not register a layout in desktop
+layout pickers.
+
+To remove the installed symbols file, first switch to another layout,
+then run:
+
+#+begin_src sh
+  just remove
+#+end_src
+
+=just clean= removes generated files from =dist/=. Run =just= to list
+all commands. For other platforms, consult Kalamine's
+[[https://github.com/OneDeadKey/kalamine#using-distributable-layouts][distributable layout instructions]]; platform installation has not been
+validated.
+
+* Development
+
+Build and use the layout directly from source. See [[file:CHANGELOG.org][CHANGELOG.org]]
+for changes.
+
+When changing mappings, preserve familiar base and Shift behavior and
+existing AltGr symbols. Document any intentional exceptions and rebuild
+the layout before installing it.

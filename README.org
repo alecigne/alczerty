@@ -8,12 +8,12 @@ possibilities for French typography and additional symbols.
 
 The idea of a dead key comes from [[https://qwerty-lafayette.org/][QWERTY-Lafayette]].
 
-* Why use alczerty?
+* Why alczerty?
 
-alczerty builds on existing AZERTY habits. Letters, numbers,
-punctuation, and AltGr symbols stay in their familiar places, so
-there is little to relearn when adopting it or switching back to a
-standard French keyboard.
+alczerty (named after my initials, alc, in a fit of modesty) builds on
+existing AZERTY habits. Letters, numbers, punctuation, and AltGr
+symbols stay in their familiar places, so there is little to relearn
+when adopting it or switching back to a standard French keyboard.
 
 The single compromise is =ù=: typing it now takes two presses.
 In return, that key gives access to accented capitals, ligatures,

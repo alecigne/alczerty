@@ -1,6 +1,6 @@
 #+title: alczerty
 
-alczerty is my personal AZERTY-based keyboard layout.
+alczerty is an AZERTY-based keyboard layout.
 
 The only change incompatible with standard AZERTY is the =ù= key,
 which becomes a dead key. This single modification opens many
@@ -8,14 +8,32 @@ possibilities for French typography and additional symbols.
 
 The idea of a dead key comes from [[https://qwerty-lafayette.org/][QWERTY-Lafayette]].
 
+* Why use alczerty?
+
+alczerty builds on existing AZERTY habits. Letters, numbers,
+punctuation, and AltGr symbols stay in their familiar places, so
+there is little to relearn when adopting it or switching back to a
+standard French keyboard.
+
+The single compromise is =ù=: typing it now takes two presses.
+In return, that key gives access to accented capitals, ligatures,
+French quotation marks, nonbreaking spaces, and extra symbols.
+The usual lowercase accents remain available directly on AZERTY;
+the dead-key sequences provide another way to type them, with
+Shift giving their uppercase forms.
+
+This keeps the learning effort focused on the characters you need.
+You can keep typing as usual and learn the extra sequences gradually.
+The aim is better access to French typography with a small change
+to everyday typing habits.
+
 * Breaking changes
 :PROPERTIES:
 :CREATED:  [2026-10-24 Sat 13:58]
 :END:
 
-In the very unlikely situation where anyone else uses this layout,
-note that it's only v0.1.0. Breaking changes may be introduced without
-notice.
+alczerty is currently at v0.1.0. Breaking changes may be introduced
+without notice.
 
 * Layout
 

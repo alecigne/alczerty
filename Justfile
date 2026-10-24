@@ -25,9 +25,9 @@ install:
     @echo "Installed XKB layout {{layout}}."
     @echo "On X.Org, select it with: just use"
 
-# Select the installed layout in the current X.Org session.
-use:
-    setxkbmap {{layout}}
+# Build and apply the layout in the current X.Org session.
+use: build
+    xkbcomp "dist/{{layout}}.xkb_keymap" "$DISPLAY"
 
 # Remove installed Linux XKB symbols (requires sudo).
 remove:

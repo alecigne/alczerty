@@ -1,44 +1,37 @@
 #+title: alczerty
 
-alczerty is my personal AZERTY-based keyboard layout. For now, it stays
-compatible with classic French AZERTY, with extras for French typography:
-accented capitals, ligatures, guillemets and nonbreaking spaces.
-
-The goal is a small, practical extension that makes switching between
-this layout and an ordinary AZERTY keyboard easy.
+alczerty is my personal AZERTY-based keyboard layout. The only change
+incompatible with standard AZERTY is the =ù= key, which becomes a dead
+key. This single modification opens a world of possibilities for French
+typography and additional symbols.
 
 * Layout
 
 The source of truth is [[file:layout/alczerty.toml][layout/alczerty.toml]], built with
 [[https://github.com/OneDeadKey/kalamine][Kalamine]]. Its installation identifier is =alczerty=.
 
-Base and Shift mappings follow classic French AZERTY. AltGr symbols
-include =€= on AltGr + E and =~= on AltGr + é.
+Press and release =ù=, then press the second key shown below. For the
+Shift column, hold Shift while pressing the second key. For example,
+=ù= then =e= produces =é=; =ù= then Shift + =e= produces =É=.
 
-These shortcuts produce characters directly. Key names refer to the
-labels on a classic French AZERTY keyboard: =é= is the 2 key, for example.
+| Second key | After ù                    | After ù, with Shift               |
+|------------+----------------------------+-----------------------------------|
+| a          | à                          | À                                 |
+| e          | é                          | É                                 |
+| r          | è                          | È                                 |
+| u          | ù                          | Ù                                 |
+| c          | ç                          | Ç                                 |
+| o          | œ                          | Œ                                 |
+| q          | æ                          | Æ                                 |
+| w          | «                          | unassigned                        |
+| x          | »                          | unassigned                        |
+| t          | –                          | —                                 |
+| <          | ≤                          | ≥                                 |
+| =          | ≈                          | ≠                                 |
+| ù          | ù                          | Ù                                 |
+| space      | U+00A0 (nonbreaking space) | U+202F (narrow nonbreaking space) |
 
-| Shortcut              | Character | Description              |
-|-----------------------+-----------+--------------------------|
-| Shift + AltGr + é     | É         | Capital e, acute accent  |
-| Shift + AltGr + è     | È         | Capital e, grave accent  |
-| Shift + AltGr + à     | À         | Capital a, grave accent  |
-| Shift + AltGr + ç     | Ç         | Capital c, cedilla       |
-| Shift + AltGr + ù     | Ù         | Capital u, grave accent  |
-| AltGr + A             | æ         | ae ligature              |
-| Shift + AltGr + A     | Æ         | Capital ae ligature      |
-| AltGr + O             | œ         | oe ligature              |
-| Shift + AltGr + O     | Œ         | Capital oe ligature      |
-| AltGr + C             | ç         | c, cedilla               |
-| Shift + AltGr + C     | Ç         | Capital c, cedilla       |
-| AltGr + W             | «         | Opening guillemet        |
-| AltGr + X             | »         | Closing guillemet        |
-| AltGr + Space         | U+00A0    | Nonbreaking space        |
-| Shift + AltGr + Space | U+202F    | Narrow nonbreaking space |
-
-The circumflex and diaeresis dead keys remain available for characters
-such as =Ê=, =Â= and =Ë=. Space and Shift + Space produce ordinary spaces.
-AltGr + Space and Shift + AltGr + Space produce nonbreaking spaces.
+Try the sequences with =just preview= before activating the layout.
 
 * Preview and build
 
@@ -67,20 +60,26 @@ can also be run directly:
 
 * Use on Linux
 
-Install the generated XKB symbols file (requires =sudo=):
-
-#+begin_src sh
-  just install
-#+end_src
-
-This builds the layout and copies =dist/alczerty.xkb_symbols= into
-=/usr/share/X11/xkb/symbols/alczerty=. Set =XKB_CONFIG_ROOT= to override
-the XKB root directory.
-
-On X.Org, activate the installed layout for the current session:
+On X.Org, run this from the project directory to build and activate the
+layout:
 
 #+begin_src sh
   just use
+#+end_src
+
+This requires =xkbcomp=. It loads the standalone
+=dist/alczerty.xkb_keymap= into the current X session. No system
+installation or =sudo= is required.
+
+=just install= optionally installs the generated XKB symbols system-wide
+and requires =sudo=.
+
+For automatic activation at login, add the following command to your
+desktop's X11 session startup, replacing the path with this project's
+absolute path:
+
+#+begin_src sh
+  just --justfile /absolute/path/to/azerty-alc/Justfile use
 #+end_src
 
 To return to standard French AZERTY:
@@ -89,20 +88,8 @@ To return to standard French AZERTY:
   setxkbmap fr
 #+end_src
 
-Wayland setup depends on the compositor or desktop environment. Configure
-it to load the installed =alczerty= XKB layout; =just use= is for X.Org.
-Installing the symbols file alone does not register a layout in desktop
-layout pickers.
-
-To remove the installed symbols file, first switch to another layout,
-then run:
-
-#+begin_src sh
-  just remove
-#+end_src
-
 =just clean= removes generated files from =dist/=. Run =just= to list
-all commands. For other platforms, consult Kalamine's
+all commands. For Wayland and other platforms, consult Kalamine's
 [[https://github.com/OneDeadKey/kalamine#using-distributable-layouts][distributable layout instructions]]; platform installation has not been
 validated.
 
@@ -113,4 +100,4 @@ for changes.
 
 When changing mappings, preserve familiar base and Shift behavior and
 existing AltGr symbols. Document any intentional exceptions and rebuild
-the layout before installing it.
+the layout before activating it.

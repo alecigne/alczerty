@@ -5,6 +5,14 @@ incompatible with standard AZERTY is the =ù= key, which becomes a dead
 key. This single modification opens a world of possibilities for French
 typography and additional symbols.
 
+* Breaking changes
+:PROPERTIES:
+:CREATED:  [2026-10-24 Sat 13:58]
+:END:
+
+In the very unlikely situation where anyone else uses this layout, note
+that it's only v0.1.0. Breaking changes may be introduced without notice.
+
 * Layout
 
 The source of truth is [[file:layout/alczerty.toml][layout/alczerty.toml]], built with

@@ -1,27 +1,29 @@
 #+title: alczerty
 
-alczerty is my personal AZERTY-based keyboard layout. The only change
-incompatible with standard AZERTY is the =ù= key, which becomes a dead
-key. This single modification opens a world of possibilities for French
-typography and additional symbols.
+alczerty is my personal AZERTY-based keyboard layout.
+
+The only change incompatible with standard AZERTY is the =ù= key,
+which becomes a dead key. This single modification opens many
+possibilities for French typography and additional symbols.
+
+The idea of a dead key comes from [[https://qwerty-lafayette.org/][QWERTY-Lafayette]].
 
 * Breaking changes
 :PROPERTIES:
 :CREATED:  [2026-10-24 Sat 13:58]
 :END:
 
-In the very unlikely situation where anyone else uses this layout, note
-that it's only v0.1.0. Breaking changes may be introduced without notice.
+In the very unlikely situation where anyone else uses this layout,
+note that it's only v0.1.0. Breaking changes may be introduced without
+notice.
 
 * Layout
-
-The source of truth is [[file:layout/alczerty.toml][layout/alczerty.toml]], built with
-[[https://github.com/OneDeadKey/kalamine][Kalamine]]. Its installation identifier is =alczerty=.
 
 Press and release =ù=, then press the second key shown below. For the
 Shift column, hold Shift while pressing the second key. For example,
 =ù= then =e= produces =é=; =ù= then Shift + =e= produces =É=.
 
+|------------+----------------------------+-----------------------------------|
 | Second key | After ù                    | After ù, with Shift               |
 |------------+----------------------------+-----------------------------------|
 | a          | à                          | À                                 |
@@ -38,74 +40,209 @@ Shift column, hold Shift while pressing the second key. For example,
 | =          | ≈                          | ≠                                 |
 | ù          | ù                          | Ù                                 |
 | space      | U+00A0 (nonbreaking space) | U+202F (narrow nonbreaking space) |
+|------------+----------------------------+-----------------------------------|
 
-Try the sequences with =just preview= before activating the layout.
+* Download and install
 
-* Preview and build
+Download =alczerty.zip= from the [[https://github.com/alecigne/alczerty/releases][Releases]] page and extract it. You can
+use the released files without installing just or Kalamine.
 
-Install [[https://github.com/casey/just][just]], Python 3.11 or newer, and Kalamine. The initial build is
-validated with Kalamine 0.40:
+|------------------------+-------------------------------------------------|
+| File                   | Purpose                                         |
+|------------------------+-------------------------------------------------|
+| =alczerty.xkb_keymap=  | Linux: standalone XKB keymap                    |
+| =alczerty.xkb_symbols= | Linux: XKB symbols for system installation      |
+| =alczerty.keylayout=   | macOS keyboard layout                           |
+| =alczerty.ahk=         | Windows: AutoHotkey script                      |
+| =alczerty.klc=         | Windows: source for building a native installer |
+| =alczerty.svg=         | Layout diagram; open it in a browser            |
+| =alczerty.json=        | Layout data for browser preview tools           |
+|------------------------+-------------------------------------------------|
 
-#+begin_src sh
-  uv tool install kalamine==0.40
-  just preview
-#+end_src
+** Linux (X.Org)
 
-=just preview= starts Kalamine's browser preview with live reload.
-To build distributable files:
+There are two ways to activate alczerty:
 
-#+begin_src sh
-  just build
-#+end_src
+|-------------+------------------------+-------------------------------------------------------------------------|
+| Tool        | File                   | How it activates the layout                                             |
+|-------------+------------------------+-------------------------------------------------------------------------|
+| =setxkbmap= | =alczerty.xkb_symbols= | Selects installed symbols by name, using the system's XKB configuration |
+| =xkbcomp=   | =alczerty.xkb_keymap=  | Loads the standalone keymap directly from its file path                 |
+|-------------+------------------------+-------------------------------------------------------------------------|
 
-Output is written to =dist/=, which is excluded from Git. These commands
-can also be run directly:
+*** xkbcomp: load the standalone keymap
 
-#+begin_src sh
-  kalamine watch layout/alczerty.toml
-  kalamine build layout/alczerty.toml
-#+end_src
-
-* Use on Linux
-
-On X.Org, run this from the project directory to build and activate the
-layout:
-
-#+begin_src sh
-  just use
-#+end_src
-
-This requires =xkbcomp=. It loads the standalone
-=dist/alczerty.xkb_keymap= into the current X session. No system
-installation or =sudo= is required.
-
-=just install= optionally installs the generated XKB symbols system-wide
-and requires =sudo=.
-
-For automatic activation at login, add the following command to your
-desktop's X11 session startup, replacing the path with this project's
-absolute path:
+The standalone keymap can be kept anywhere. Load it by its path to
+activate the layout in the current X session. From the directory
+containing the extracted files, run:
 
 #+begin_src sh
-  just --justfile /absolute/path/to/azerty-alc/Justfile use
+  xkbcomp alczerty.xkb_keymap "$DISPLAY"
 #+end_src
 
-To return to standard French AZERTY:
+This requires =xkbcomp= and no =sudo=. For a permanent copy in your
+home directory, run:
+
+#+begin_src sh
+  install -Dm 0644 alczerty.xkb_keymap "$HOME/.local/share/alczerty/alczerty.xkb_keymap"
+#+end_src
+
+You can then activate that copy with the command below. For automatic
+activation at login, add it to your desktop's X11 session startup:
+
+#+begin_src sh
+  xkbcomp "$HOME/.local/share/alczerty/alczerty.xkb_keymap" "$DISPLAY"
+#+end_src
+
+The standalone keymap implements the dead key differently from the
+symbols file, so modifier customizations can affect the two methods
+differently.
+
+*** setxkbmap: install and select by name
+
+Install the symbols file in the system's XKB directory, then select
+=alczerty= by name to activate it in the current X session. From the
+directory containing the extracted files, run:
+
+#+begin_src sh
+  sudo install -m 0644 alczerty.xkb_symbols "${XKB_CONFIG_ROOT:-/usr/share/X11/xkb}/symbols/alczerty"
+  setxkbmap alczerty
+#+end_src
+
+Installation requires =sudo=; selecting the installed layout does not.
+For automatic activation at login, add =setxkbmap alczerty= to your
+desktop's X11 session startup.
+
+The symbols file uses =Mod3= for the dead key. Custom modifier
+mappings, including those applied with =xmodmap=, must preserve that
+assignment.
+
+*** Return to standard AZERTY
+
+With either method, return to standard French AZERTY with:
 
 #+begin_src sh
   setxkbmap fr
 #+end_src
 
-=just clean= removes generated files from =dist/=. Run =just= to list
-all commands. For Wayland and other platforms, consult Kalamine's
-[[https://github.com/OneDeadKey/kalamine#using-distributable-layouts][distributable layout instructions]]; platform installation has not been
-validated.
+For Wayland, follow Kalamine's [[https://github.com/OneDeadKey/kalamine#using-distributable-layouts][distributable layout instructions]].
 
-* Development
+** macOS
 
-Build and use the layout directly from source. See [[file:CHANGELOG.org][CHANGELOG.org]]
-for changes.
+Copy =alczerty.keylayout= to =~/Library/Keyboard Layouts/=, creating
+the directory if needed. Log out and back in, then add the layout in
+your keyboard input source settings.
 
-When changing mappings, preserve familiar base and Shift behavior and
-existing AltGr symbols. Document any intentional exceptions and rebuild
-the layout before activating it.
+** Windows
+
+Run =alczerty.ahk= with [[https://www.autohotkey.com/download/1.1/][AutoHotkey 1.1]]. Press both Alt keys together
+to enable or disable it.
+
+The =alczerty.klc= file can be opened in MSKLC or KbdEdit to build a
+native installer. See Kalamine's [[https://github.com/OneDeadKey/kalamine#using-distributable-layouts][installation instructions]] for the
+steps and limitations of custom dead keys with MSKLC.
+
+macOS, Windows, and Wayland usage have not been validated for this
+layout.
+
+* Working from source
+
+The source of truth is [[file:layout/alczerty.toml][layout/alczerty.toml]], Its installation
+identifier is =alczerty=.
+
+You will need Python 3.11 or newer and [[https://github.com/OneDeadKey/kalamine][Kalamine]].
+
+#+begin_src sh
+  uv tool install kalamine==0.40
+#+end_src
+
+All commands below can be simplified by using [[https://github.com/casey/just][just]]; check the
+[[file:Justfile][Justfile]].
+
+** Preview
+
+For starting Kalamine's browser preview with live reload:
+
+#+begin_src sh
+  kalamine watch layout/alczerty.toml
+#+end_src
+
+...or with ~just~:
+
+#+begin_src sh
+  just preview
+#+end_src
+
+** Build
+:PROPERTIES:
+:CREATED:  [2026-10-24 Sat 15:14]
+:END:
+
+To build distributable files:
+
+#+begin_src sh
+  kalamine build layout/alczerty.toml
+  just build
+#+end_src
+
+...or with ~just~:
+
+#+begin_src sh
+  just build
+#+end_src
+
+Output is written to =dist/=, which is excluded from Git.
+
+** Check, package, and clean
+:PROPERTIES:
+:CREATED:  [2026-10-24 Sat 15:14]
+:END:
+
+These recipes are available through [[file:Justfile][just]]:
+
+|----------------+------------------------------------------------------------------|
+| Command        | Effect                                                           |
+|----------------+------------------------------------------------------------------|
+| =just check=   | Builds all files, checks the outputs, and compiles the XKB keymap |
+| =just package= | Runs the same checks, then creates =dist/alczerty.zip=           |
+| =just clean=   | Deletes =dist/=, including any generated ZIP                     |
+|----------------+------------------------------------------------------------------|
+
+=just check= and =just package= require =xkbcomp=. Run =just= to list
+all available recipes.
+
+Recipes find =python3= or =python= automatically. Set =PYTHON= to an
+interpreter name or path to choose a specific Python installation.
+
+** Activate from source on Linux (X.Org)
+
+Run these commands from the project directory. Choose either of the
+two activation methods described in the installation section.
+
+To build and activate the standalone keymap with =xkbcomp=:
+
+#+begin_src sh
+  just use
+#+end_src
+
+This loads =dist/alczerty.xkb_keymap= into the current X session. It
+requires no =sudo= or system installation.
+
+To build and install the symbols file, then activate it with
+=setxkbmap=:
+
+#+begin_src sh
+  just install
+  setxkbmap alczerty
+#+end_src
+
+=just install= requires =sudo= and copies the symbols file into the
+system's XKB directory. It does not activate the layout; the
+=setxkbmap= command does that. Re-run =just install= after changing
+the source to update the installed file.
+
+Both =just use= and =just install= build automatically. With either
+method, =setxkbmap fr= returns to standard French AZERTY.
+
+To uninstall the symbols file, run =just remove=; this requires =sudo=
+and does not change the active layout.

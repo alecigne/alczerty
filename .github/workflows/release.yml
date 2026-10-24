@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       increment:
-        description: Semantic version increment
+        description: Version increment (first release is v0.1.0)
         required: true
         default: patch
         type: choice
@@ -54,7 +54,10 @@ jobs:
           tag_pattern='^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'
           latest_tag=$(git tag --list --sort=-version:refname | sed -nE "/$tag_pattern/{p;q;}")
           if [[ -z "$latest_tag" ]]; then
-            latest_tag="v$(python -c 'import tomllib; print(tomllib.load(open("layout/alczerty.toml", "rb"))["version"])')"
+            release_tag=v0.1.0
+            echo "tag=$release_tag" >> "$GITHUB_OUTPUT"
+            echo "First release: $release_tag"
+            exit 0
           fi
           existing_tag=$(git tag --points-at HEAD | sed -nE "/$tag_pattern/{p;q;}")
           if [[ -n "$existing_tag" ]]; then

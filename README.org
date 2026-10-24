@@ -193,6 +193,9 @@ To build distributable files:
 
 Output is written to =dist/=, which is excluded from Git.
 
+Local builds use =0.0.0= as a development version. Files downloaded
+from Releases carry the version of that release.
+
 ** Check, package, and clean
 :PROPERTIES:
 :CREATED:  [2026-10-24 Sat 15:14]

@@ -6,7 +6,8 @@ author = "Anthony Le Cigne"
 description = "French AZERTY-compatible layout with a dead key on ù"
 url = "https://github.com/alecigne/alczerty"
 geometry = "ERGO"
-version = "0.1.0"
+# Local-build placeholder; the release workflow substitutes the published version.
+version = "0.0.0"
 
 # ** activates OneDeadKey; the right side of each cell defines its output.
 base = '''
